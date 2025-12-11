@@ -1,10 +1,421 @@
-{\rtf1\ansi\ansicpg932\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 CourierNewPSMT;}
-{\colortbl;\red255\green255\blue255;\red231\green236\blue237;\red33\green47\blue63;}
-{\*\expandedcolortbl;;\cssrgb\c92549\c94118\c94510;\cssrgb\c17255\c24314\c31373;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\deftab720
-\pard\pardeftab720\partightenfactor0
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポートフォリオ - 限定公開</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-\f0\fs26 \cf2 \cb3 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 <!DOCTYPE html> <html lang="ja"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>\uc0\u12509 \u12540 \u12488 \u12501 \u12457 \u12522 \u12458 </title> <style> body \{ font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; background: #f5f5f5; \} h1 \{ color: #333; text-align: center; \} .project \{ background: white; padding: 20px; margin: 20px 0; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); \} </style> </head> <body> <h1>\u12354 \u12394 \u12383 \u12398 \u21517 \u21069 \u12398 \u12509 \u12540 \u12488 \u12501 \u12457 \u12522 \u12458 </h1> <div class="project"> <h2>\u12503 \u12525 \u12472 \u12455 \u12463 \u12488 1</h2> <p>\u12503 \u12525 \u12472 \u12455 \u12463 \u12488 \u12398 \u35500 \u26126 \u12434 \u12371 \u12371 \u12395 \u26360 \u12365 \u12414 \u12377 </p> </div> <div class="project"> <h2>\u12503 \u12525 \u12472 \u12455 \u12463 \u12488 2</h2> <p>\u12503 \u12525 \u12472 \u12455 \u12463 \u12488 \u12398 \u35500 \u26126 \u12434 \u12371 \u12371 \u12395 \u26360 \u12365 \u12414 \u12377 </p> </div> </body> </html>}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* パスワード保護画面 */
+        #auth-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .auth-box h1 {
+            margin-bottom: 10px;
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .auth-box p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* ポートフォリオ画面 */
+        #portfolio-screen {
+            display: none;
+            background: #f5f5f5;
+        }
+
+        header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+
+        .project-content {
+            padding: 25px;
+        }
+
+        .project-content h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .project-content p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-tag {
+            background: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .skill-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .skill-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .skill-card h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .warning-banner {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .warning-banner strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            .section-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- パスワード保護画面 -->
+    <div id="auth-screen">
+        <div class="auth-box">
+            <h1>🔒 限定公開ポートフォリオ</h1>
+            <p>閲覧にはパスワードが必要です</p>
+            <input type="password" id="password-input" class="password-input" placeholder="パスワードを入力してください">
+            <button onclick="checkPassword()" class="submit-btn">ログイン</button>
+            <p class="error-message" id="error-message">❌ パスワードが間違っています</p>
+        </div>
+    </div>
+
+    <!-- ポートフォリオ画面 -->
+    <div id="portfolio-screen">
+        <header>
+            <nav>
+                <div class="logo">My Portfolio</div>
+                <button onclick="logout()" class="logout-btn">ログアウト</button>
+            </nav>
+        </header>
+
+        <div class="hero">
+            <h1>あなたの名前</h1>
+            <p>職種・専門分野</p>
+        </div>
+
+        <div class="container">
+            <div class="warning-banner">
+                <strong>⚠️ 機密情報について：</strong> このポートフォリオには会社の実績が含まれています。スクリーンショットやシェアはご遠慮ください。
+            </div>
+
+            <h2 class="section-title">プロジェクト実績</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">🏢</div>
+                    <div class="project-content">
+                        <h3>プロジェクト名1</h3>
+                        <p>プロジェクトの詳細説明をここに記載します。成果や使用した技術などを簡潔に説明してください。</p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">技術1</span>
+                            <span class="tech-tag">技術2</span>
+                            <span class="tech-tag">技術3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">📱</div>
+                    <div class="project-content">
+                        <h3>プロジェクト名2</h3>
+                        <p>プロジェクトの詳細説明をここに記載します。成果や使用した技術などを簡潔に説明してください。</p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">技術1</span>
+                            <span class="tech-tag">技術2</span>
+                            <span class="tech-tag">技術3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">💼</div>
+                    <div class="project-content">
+                        <h3>プロジェクト名3</h3>
+                        <p>プロジェクトの詳細説明をここに記載します。成果や使用した技術などを簡潔に説明してください。</p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">技術1</span>
+                            <span class="tech-tag">技術2</span>
+                            <span class="tech-tag">技術3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">スキル</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">💻</div>
+                    <h3>スキル分野1</h3>
+                    <p>具体的なスキルや技術をここに記載</p>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-icon">⚙️</div>
+                    <h3>スキル分野2</h3>
+                    <p>具体的なスキルや技術をここに記載</p>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-icon">🎨</div>
+                    <h3>スキル分野3</h3>
+                    <p>具体的なスキルや技術をここに記載</p>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-icon">🗄️</div>
+                    <h3>スキル分野4</h3>
+                    <p>具体的なスキルや技術をここに記載</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 あなたの名前 Portfolio. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 14px; opacity: 0.8;">本サイトの内容は機密情報を含みます。無断転載・共有を禁じます。</p>
+        </footer>
+    </div>
+
+    <script>
+        // ここにパスワードを設定してください
+        const correctPassword = 'portfolio2024';
+
+        // Enterキーでログイン
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            const errorMsg = document.getElementById('error-message');
+
+            if (input === correctPassword) {
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('portfolio-screen').style.display = 'block';
+                errorMsg.style.display = 'none';
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('password-input').value = '';
+                document.getElementById('password-input').focus();
+            }
+        }
+
+        function logout() {
+            if (confirm('ログアウトしますか？')) {
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('portfolio-screen').style.display = 'none';
+                document.getElementById('password-input').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
